@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Tasker.MVVM.Models;
 
 namespace Tasker.MVVM.ViewModels
@@ -16,15 +17,40 @@ namespace Tasker.MVVM.ViewModels
     {
         public ObservableCollection<Category>? Categories { get; set; }
         public ObservableCollection<MyTask>? Tasks { get; set; }
+        public ICommand DeleteTaskCommand { get; }
+        public ICommand DeleteCategoryCommand { get; }
+
 
         public MainViewModel()
         {
             FillData();
+
+            DeleteTaskCommand = new Command<MyTask>(DeleteTask);
+            DeleteCategoryCommand = new Command<Category>(DeleteCategory);
+
             foreach (var t in Tasks)
             {
                 ((INotifyPropertyChanged)t).PropertyChanged += Task_PropertyChanged;
             }
             Tasks.CollectionChanged += Task_CollectionChanged;
+        }
+
+        private void DeleteTask(MyTask task)
+        {
+            if (task != null)
+            {
+                Tasks.Remove(task);
+                UpdateData();
+            }
+        }
+
+        private void DeleteCategory(Category category)
+        {
+            if (category != null)
+            {
+                Categories.Remove(category);
+                UpdateData();
+            }
         }
 
         private void Task_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

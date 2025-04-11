@@ -47,26 +47,37 @@
             <CollectionView Grid.Row="1" ItemsSource="{Binding Tasks}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame BorderColor="Transparent">
-                            <HorizontalStackLayout>
-                                <CheckBox
-                                    x:Name="checkBox"
-                                    CheckedChanged="checkBox_CheckedChanged"
-                                    IsChecked="{Binding Completed}"
-                                    VerticalOptions="Center"
-                                    Color="{Binding taskColor, Converter={StaticResource ColorConverter}}" />
-                                <Label Text="{Binding TaskName}" VerticalOptions="Center">
-                                    <Label.Triggers>
-                                        <DataTrigger
-                                            Binding="{Binding Source={x:Reference checkBox}, Path=IsChecked}"
-                                            TargetType="Label"
-                                            Value="True">
-                                            <Setter Property="TextDecorations" Value="Strikethrough" />
-                                        </DataTrigger>
-                                    </Label.Triggers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Frame>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem
+                                        IconImageSource="trash.png"
+                                        BackgroundColor="Red"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteTaskCommand}"
+                                        CommandParameter="{Binding}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame BorderColor="Transparent">
+                                <HorizontalStackLayout>
+                                    <CheckBox
+                                        x:Name="checkBox"
+                                        CheckedChanged="checkBox_CheckedChanged"
+                                        IsChecked="{Binding Completed}"
+                                        VerticalOptions="Center"
+                                        Color="{Binding taskColor}" />
+                                    <Label Text="{Binding TaskName}" VerticalOptions="Center">
+                                        <Label.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding Source={x:Reference checkBox}, Path=IsChecked}"
+                                                TargetType="Label"
+                                                Value="True">
+                                                <Setter Property="TextDecorations" Value="Strikethrough" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </HorizontalStackLayout>
+                            </Frame>
+                        </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
